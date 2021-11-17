@@ -56,19 +56,18 @@ def updateDevice(device, deviceValue):
         deviceValue = round(float(deviceValue), 1)
         Devices[device.unit].Update(nValue=1, sValue=str(deviceValue))
     if device.type == 113 and device.sub == 0:
-        Devices[device.unit].Update(nValue=0, sValue=str(deviceValue))
+        Devices[device.unit].Update(nValue=0, sValue=str(float(deviceValue) * 1000))
     if device.type == 242 and device.sub == 1:
         Devices[device.unit].Update(nValue=1, sValue=str(deviceValue))
     if device.type == 243 and (device.sub in [6, 9, 19, 23]):
-        Devices[device.unit].Update(nValue=1, sValue=str(float(deviceValue) * 1000))
+        Devices[device.unit].Update(nValue=1, sValue=str(deviceValue))
     if device.type == 244 and device.sub == 73:
         if (str(deviceValue) == "1"):
             Devices[device.unit].Update(nValue=1,sValue="on")
         if (str(deviceValue) == "0"):
             Devices[device.unit].Update(nValue=0,sValue="off")
     if device.type == 248:
-        deviceValue = float(deviceValue) * 1000
-        Devices[device.unit].Update(nValue=1, sValue=str(deviceValue))
+        Devices[device.unit].Update(nValue=1, sValue=str(float(deviceValue) * 1000))
 
 
 def onStart():
