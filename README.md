@@ -11,9 +11,10 @@ More ([documentaion](https://emsesp.github.io/docs/#/Command?id=http-api))
 ```bash
 cd ~/domoticz/plugins
 git clone https://github.com/derenback/Domoticz-EMS-Gateway.git
-pip3 install requests json
+pip3 install requests
 sudo systemctl restart domoticz
 ```
+- Create a new hardware of the type "EMS GW REST API interface"
 
 ## Update
 ```bash
