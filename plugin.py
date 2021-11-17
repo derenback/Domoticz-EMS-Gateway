@@ -11,7 +11,6 @@ Requirements:
     <params>
         <param field="Address" label="EMS Bridge IP" width="200px" required="true" default="192.168.0.127"/>
         <param field="Mode2" label="Reading Interval sec." width="40px" required="true" default="10" />
-        <param field="Mode3" label="Token" width="800px" required="true" default="Your token!" />
         <param field="Mode4" label="Debug" width="75px">
             <options>
                 <option label="On" value="Debug"/>
@@ -49,25 +48,24 @@ boiler_units = [device_info( 1,80,5,"outdoortemp","Outdoor"),
                 device_info(40,248,1,"hppower","Power")]
 
 
-def updateDevice(device, deviceValue):
-    if (Parameters["Mode4"] == "Debug"):
-        Domoticz.Log("EMS " + device.name + " : " + str(deviceValue))
-    if (device.type == 80 and device.sub == 5) or (device.type == 81 and device.sub == 1):
-        deviceValue = round(float(deviceValue), 1)
-        Devices[device.unit].Update(nValue=1, sValue=str(deviceValue))
-    if device.type == 113 and device.sub == 0:
-        Devices[device.unit].Update(nValue=0, sValue=str(float(deviceValue) * 1000))
-    if device.type == 242 and device.sub == 1:
-        Devices[device.unit].Update(nValue=1, sValue=str(deviceValue))
-    if device.type == 243 and (device.sub in [6, 9, 19, 23]):
-        Devices[device.unit].Update(nValue=1, sValue=str(deviceValue))
-    if device.type == 244 and device.sub == 73:
-        if (str(deviceValue) == "1"):
+def updateDevice(device, value):
+    if Parameters["Mode4"] == "Debug":
+        Domoticz.Log("EMS " + device.name + " : " + str(value))
+    
+    if device.type == 80:
+        value = round(float(value), 1)
+        Devices[device.unit].Update(nValue=1, sValue=str(value))
+    if device.type == 113:
+        Devices[device.unit].Update(nValue=0, sValue=str(float(value) * 1000))
+    if device.type == 243:
+        Devices[device.unit].Update(nValue=1, sValue=str(value))
+    if device.type == 244:
+        if str(value) == "1":
             Devices[device.unit].Update(nValue=1,sValue="on")
-        if (str(deviceValue) == "0"):
+        elif str(value) == "0":
             Devices[device.unit].Update(nValue=0,sValue="off")
     if device.type == 248:
-        Devices[device.unit].Update(nValue=1, sValue=str(float(deviceValue) * 1000))
+        Devices[device.unit].Update(nValue=1, sValue=str(float(value) * 1000))
 
 
 def onStart():
@@ -92,10 +90,7 @@ def onStart():
 def onHeartbeat():
     if (Parameters["Mode4"] == "Debug"):
         Domoticz.Log("EMS Heartbeat")
-    url = "http://" + Parameters["Address"] + "/api/boiler/"
-    token = Parameters["Mode3"]
-    headers = { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token }
-    response = requests.get(url, headers=headers, verify=False)    
+    response = requests.get("http://" + Parameters["Address"] + "/api/boiler/")    
     json_response = json.loads(response.content.decode("utf8"))
     for device in boiler_units:
         if device.ident in json_response:
