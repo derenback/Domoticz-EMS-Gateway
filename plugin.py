@@ -7,7 +7,7 @@ Requirements:
         + json and requests
 """
 """
-<plugin key="EMS-API-GW" name="EMS GW REST API interface" version="0.0.1" author="Derenback">
+<plugin key="EMS-API-GW" name="EMS GW REST API interface" version="0.0.2" author="Derenback">
     <params>
         <param field="Address" label="EMS Bridge IP" width="200px" required="true" default="192.168.0.127"/>
         <param field="Mode2" label="Reading Interval sec." width="40px" required="true" default="10" />
@@ -73,6 +73,12 @@ def onStart():
 
     if (Parameters["Mode4"] == "Debug"):
         Domoticz.Log("EMS Debug is On")
+        try:
+            response = requests.get("http://" + Parameters["Address"] + "/api/system/info/",verify=False, timeout=2)    
+            json_response = json.loads(response.content.decode("utf8"))
+            Domoticz.Log("EMS GW Version: " + json_response["System"]["version"])
+        except:
+            Domoticz.Log("EMS Failed to get version from gateway")
 
     Domoticz.Heartbeat(int(Parameters["Mode2"]))
 
@@ -90,11 +96,14 @@ def onStart():
 def onHeartbeat():
     if (Parameters["Mode4"] == "Debug"):
         Domoticz.Log("EMS Heartbeat")
-    response = requests.get("http://" + Parameters["Address"] + "/api/boiler/")    
-    json_response = json.loads(response.content.decode("utf8"))
-    for device in boiler_units:
-        if device.ident in json_response:
-            updateDevice(device, json_response[device.ident])
+    try:
+        response = requests.get("http://" + Parameters["Address"] + "/api/boiler/",verify=False, timeout=2)    
+        json_response = json.loads(response.content.decode("utf8"))
+        for device in boiler_units:
+            if device.ident in json_response:
+                updateDevice(device, json_response[device.ident])
+    except:
+        Domoticz.Log("EMS Failed to get data from gateway")
 
 def onStop():
     Domoticz.Log("EMS Stopped")

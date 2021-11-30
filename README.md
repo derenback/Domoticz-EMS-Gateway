@@ -29,6 +29,7 @@ sudo systemctl restart domoticz
 - Boiler: Bosch Enviline/Compress 6000AW/Hybrid 7000iAW/SupraEco
 
 ## Version history
+    0.0.2 Added some error handling and GW version for debug
     0.0.1 Initial version
 
 
