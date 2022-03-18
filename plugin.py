@@ -7,7 +7,7 @@ Requirements:
         + json and requests
 """
 """
-<plugin key="EMS-API-GW" name="EMS GW REST API interface" version="0.0.2" author="Derenback">
+<plugin key="EMS-API-GW" name="EMS Gateway REST API interface" version="0.0.3" author="Derenback">
     <params>
         <param field="Address" label="EMS Bridge IP" width="200px" required="true" default="192.168.0.127"/>
         <param field="Mode2" label="Reading Interval sec." width="40px" required="true" default="10" />
@@ -33,19 +33,19 @@ class device_info:
     self.ident = ident
     self.name = name
 
-boiler_units = [device_info( 1,80,5,"outdoortemp","Outdoor"),
-                device_info( 2,80,5,"rettemp","Radiator return"),
-                device_info( 3,80,5,"curflowtemp","Radiator out"),
-                device_info( 4,80,5,"wwcurtemp","Water"),
-                device_info(10,113,0,"nrgsuppww","Water (sup)"),
-                device_info(11,113,0,"nrgsuppheating","Heating (sup)"),
-                device_info(12,113,0,"nrgconscompheating","Heating (used)"),
-                device_info(13,113,0,"nrgconscompww","Water (used)"),
-                device_info(20,243,6,"curburnpow","Power"),
+boiler_units = [device_info( 1, 80, 5,"outdoortemp","Outdoor"),
+                device_info( 2, 80, 5,"rettemp","Radiator return"),
+                device_info( 3, 80, 5,"curflowtemp","Radiator out"),
+                device_info( 4, 80, 5,"wwcurtemp","Water"),
+                device_info(10,113, 0,"nrgsuppww","Water (supplied)"),
+                device_info(11,113, 0,"nrgsuppheating","Heating (supplied)"),
+                device_info(12,113, 0,"nrgconscompheating","Heating (used)"),
+                device_info(13,113, 0,"nrgconscompww","Water (used)"),
+                device_info(20,243, 6,"curburnpow","Power"),
                 device_info(30,244,73,"wwactivated","Warm water"),
                 device_info(31,244,73,"wwheat","Warm water heater"),
-                device_info(33,244,73,"wwdisinfecting","Water deisinfection"),
-                device_info(40,248,1,"hppower","Power")]
+                device_info(33,244,73,"wwdisinfecting","Water disinfection"),
+                device_info(40,248, 1,"hppower","Power")]
 
 
 def updateDevice(device, value):
@@ -55,16 +55,16 @@ def updateDevice(device, value):
     if device.type == 80:
         value = round(float(value), 1)
         Devices[device.unit].Update(nValue=1, sValue=str(value))
-    if device.type == 113:
+    elif device.type == 113:
         Devices[device.unit].Update(nValue=0, sValue=str(float(value) * 1000))
-    if device.type == 243:
+    elif device.type == 243:
         Devices[device.unit].Update(nValue=1, sValue=str(value))
-    if device.type == 244:
+    elif device.type == 244:
         if str(value) == "1":
             Devices[device.unit].Update(nValue=1,sValue="on")
         elif str(value) == "0":
             Devices[device.unit].Update(nValue=0,sValue="off")
-    if device.type == 248:
+    elif device.type == 248:
         Devices[device.unit].Update(nValue=1, sValue=str(float(value) * 1000))
 
 
