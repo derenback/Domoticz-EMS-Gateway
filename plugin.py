@@ -7,7 +7,7 @@ Requirements:
         + json and requests
 """
 """
-<plugin key="EMS-API-GW" name="EMS Gateway REST API interface" version="0.0.3" author="Derenback">
+<plugin key="EMS-API-GW" name="EMS Gateway REST API interface" version="0.0.4" author="Derenback">
     <params>
         <param field="Address" label="EMS Bridge IP" width="200px" required="true" default="192.168.0.127"/>
         <param field="Mode2" label="Reading Interval sec." width="40px" required="true" default="10" />
@@ -42,6 +42,7 @@ boiler_units = [device_info( 1, 80, 5,"outdoortemp","Outdoor"),
                 device_info(12,113, 0,"nrgconscompheating","Heating (used)"),
                 device_info(13,113, 0,"nrgconscompww","Water (used)"),
                 device_info(20,243, 6,"curburnpow","Power"),
+                device_info(21,243, 6,"hpcircspd","Circulation pump speed"),
                 device_info(30,244,73,"wwactivated","Warm water"),
                 device_info(31,244,73,"wwheat","Warm water heater"),
                 device_info(33,244,73,"wwdisinfecting","Water disinfection"),
