@@ -7,7 +7,7 @@ Requirements:
         + json and requests
 """
 """
-<plugin key="EMS-API-GW" name="EMS Gateway REST API interface" version="0.0.6" author="Derenback">
+<plugin key="EMS-API-GW" name="EMS Gateway REST API interface" version="0.0.7" author="Derenback">
     <params>
         <param field="Address" label="EMS Bridge IP" width="200px" required="true" default="192.168.0.127"/>
         <param field="Mode2" label="Reading Interval sec." width="40px" required="true" default="10" />
@@ -22,16 +22,17 @@ Requirements:
 """
 
 import Domoticz
+from dataclasses import dataclass
 import json
 import requests
 
+@dataclass
 class device_info:
-  def __init__(self, unit, type, sub, ident, name):
-    self.unit = unit
-    self.type = type
-    self.sub = sub
-    self.ident = ident
-    self.name = name
+    unit: int
+    type: int
+    sub: int
+    ident: str
+    name: str
 
 boiler_units = [device_info( 1, 80, 5,"outdoortemp","Outdoor"),
                 device_info( 2, 80, 5,"rettemp","Radiator return"),
