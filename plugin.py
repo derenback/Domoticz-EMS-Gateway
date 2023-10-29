@@ -34,6 +34,9 @@ class device_info:
     ident: str
     name: str
 
+heartbeat = 5
+heartbeat_count = 0
+
 boiler_units = [device_info( 1, 80, 5,"outdoortemp","Outdoor"),
                 device_info( 2, 80, 5,"rettemp","Radiator return"),
                 device_info( 3, 80, 5,"curflowtemp","Radiator out"),
@@ -73,6 +76,7 @@ def updateDevice(device, value):
 
 
 def onStart():
+    global heartbeat
     Domoticz.Log("Domoticz EMS Gateway plugin start")
 
     if (Parameters["Mode4"] == "Debug"):
@@ -84,7 +88,8 @@ def onStart():
         except:
             Domoticz.Log("EMS Failed to get version from gateway")
 
-    Domoticz.Heartbeat(int(Parameters["Mode2"]))
+    Domoticz.Heartbeat(1)
+    heartbeat = int(Parameters["Mode2"])
 
     for device in boiler_units:
         if device.unit not in Devices:
@@ -98,18 +103,21 @@ def onStart():
 
 
 def onHeartbeat():
-    if (Parameters["Mode4"] == "Debug"):
-        Domoticz.Log("EMS Heartbeat")
-    try:
-        response = requests.get("http://" + Parameters["Address"] + "/api/boiler/",verify=False, timeout=2)    
-        json_response = json.loads(response.content.decode("utf8"))
-        for device in boiler_units:
-            if device.ident in json_response:
-                updateDevice(device, json_response[device.ident])
-    except:
-        Domoticz.Log("EMS Failed to get data from gateway")
+    global heartbeat_count
+    if heartbeat_count > 1:
+        heartbeat_count -= 1
+    else:
+        heartbeat_count = heartbeat    
+        if (Parameters["Mode4"] == "Debug"):
+            Domoticz.Log("EMS Heartbeat")
+        try:
+            response = requests.get("http://" + Parameters["Address"] + "/api/boiler/",verify=False, timeout=2)    
+            json_response = json.loads(response.content.decode("utf8"))
+            for device in boiler_units:
+                if device.ident in json_response:
+                    updateDevice(device, json_response[device.ident])
+        except:
+            Domoticz.Log("EMS Failed to get data from gateway")
 
 def onStop():
     Domoticz.Log("EMS Stopped")
-
-
