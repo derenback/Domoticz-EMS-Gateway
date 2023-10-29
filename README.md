@@ -31,6 +31,7 @@ sudo systemctl restart domoticz
 - Boiler: Bosch Enviline/Compress 6000AW/Hybrid 7000iAW/SupraEco
 
 ## Version history
+    0.0.8 Add support for longer poll interval
     0.0.7 Use dataclass for device list
     0.0.6 Added Compressor speed
     0.0.5 Added Brine pump speed

@@ -7,7 +7,7 @@ Requirements:
         + json and requests
 """
 """
-<plugin key="EMS-API-GW" name="EMS Gateway REST API interface" version="0.0.7" author="Derenback">
+<plugin key="EMS-API-GW" name="EMS Gateway REST API interface" version="0.0.8" author="Derenback">
     <params>
         <param field="Address" label="EMS Bridge IP" width="200px" required="true" default="192.168.0.127"/>
         <param field="Mode2" label="Reading Interval sec." width="40px" required="true" default="10" />
@@ -104,7 +104,7 @@ def onStart():
 
 def onHeartbeat():
     global heartbeat_count
-    if heartbeat_count > 1:
+    if heartbeat_count > 0:
         heartbeat_count -= 1
     else:
         heartbeat_count = heartbeat    
