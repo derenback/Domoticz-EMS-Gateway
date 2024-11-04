@@ -25,12 +25,13 @@ sudo systemctl restart domoticz
 ```
 
 ## Tested on
-- Domoticz version: 2020.2 2021.1 2022.1 2022.2 2023.2, 2024.2
+- Domoticz version: 2024.7
 - EMS ESP32 - BBQKees gateway E32 
-    - Versions: 3.4.2 3.4.4 3.6.0, 3.6.4
+    - Versions: 3.7.0
 - Boiler: Bosch Enviline/Compress 6000AW/Hybrid 7000iAW/SupraEco
 
 ## Version history
+    0.1.0 Fix for breaking change in EMS ESP32 3.7.0
     0.0.8 Add support for longer poll interval
     0.0.7 Use dataclass for device list
     0.0.6 Added Compressor speed

@@ -33,25 +33,25 @@ class device_info:
     sub: int
     ident: str
     name: str
-
+    path: str = ""
+    
 heartbeat = 5
 heartbeat_count = 0
 
 boiler_units = [device_info( 1, 80, 5,"outdoortemp","Outdoor"),
                 device_info( 2, 80, 5,"rettemp","Radiator return"),
                 device_info( 3, 80, 5,"curflowtemp","Radiator out"),
-                device_info( 4, 80, 5,"wwcurtemp","Water"),
-                device_info(10,113, 0,"nrgsuppww","Water (supplied)"),
+                device_info( 4, 80, 5,"curtemp","Water", "dhw"),
+                device_info(10,113, 0,"nrgsupp","Water (supplied)", "dhw"),
                 device_info(11,113, 0,"nrgsuppheating","Heating (supplied)"),
                 device_info(12,113, 0,"nrgconscompheating","Heating (used)"),
-                device_info(13,113, 0,"nrgconscompww","Water (used)"),
+                device_info(13,113, 0,"nrgconscomp","Water (used)", "dhw"),
                 device_info(20,243, 6,"curburnpow","Power"),
                 device_info(21,243, 6,"hpcircspd","Circulation pump speed"),
                 device_info(22,243, 6,"hpbrinepumpspd","Brine pump speed"),
                 device_info(23,243, 6,"hpcompspd","Compressor speed"),
-                device_info(30,244,73,"wwactivated","Warm water"),
-                device_info(31,244,73,"wwheat","Warm water heater"),
-                device_info(33,244,73,"wwdisinfecting","Water disinfection"),
+                device_info(30,244,73,"activated","Warm water", "dhw"),
+                device_info(33,244,73,"disinfecting","Water disinfection", "dhw"),
                 device_info(40,248, 1,"hppower","Power")]
 
 
@@ -114,8 +114,12 @@ def onHeartbeat():
             response = requests.get("http://" + Parameters["Address"] + "/api/boiler/",verify=False, timeout=2)    
             json_response = json.loads(response.content.decode("utf8"))
             for device in boiler_units:
-                if device.ident in json_response:
-                    updateDevice(device, json_response[device.ident])
+                if device.path == "":
+                    if device.ident in json_response:
+                        updateDevice(device, json_response[device.ident])
+                else:
+                    if device.ident in json_response[device.path]:
+                        updateDevice(device, json_response[device.path][device.ident])
         except:
             Domoticz.Log("EMS Failed to get data from gateway")
 
