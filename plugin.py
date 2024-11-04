@@ -104,7 +104,7 @@ def onStart():
     Domoticz.Heartbeat(1)
     heartbeat = int(Parameters["Mode2"])
 
-    for device in boiler_units:
+    for device in UNITS:
         if device.unit not in Devices:
             Domoticz.Log("EMS Created sensor " + device.name)
             if device.type == COUNTER:
@@ -126,7 +126,7 @@ def onHeartbeat():
         try:
             response = requests.get("http://" + Parameters["Address"] + "/api/boiler/",verify=False, timeout=2)    
             json_response = json.loads(response.content.decode("utf8"))
-            for device in boiler_units:
+            for device in UNITS:
                 if device.path == "":
                     if device.ident in json_response:
                         updateDevice(device, json_response[device.ident])
