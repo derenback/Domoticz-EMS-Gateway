@@ -6,7 +6,7 @@ More ([documentaion](https://emsesp.github.io/docs/#/Command?id=http-api))
 - Python 3.x (requests, json)
 
 ## Installation
-- Make sure to set Boolean Format to "1/0" on your Gateway Settings - Formatting Options
+- Make sure to set Boolean Format to "1/0" for API/MQTT on your Gateway Settings - Formatting Options
 - Make sure to have the setting "Accept new Hardware Devices" turned on for new devices to be added when adding the Hardware in domoticz.
 
 ```bash
